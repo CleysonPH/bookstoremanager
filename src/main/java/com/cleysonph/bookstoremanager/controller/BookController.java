@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@RequestMapping("/books")
+@RequestMapping("api/v1/books")
 public class BookController {
 
     @ApiOperation(value = "Return a example hello world")
