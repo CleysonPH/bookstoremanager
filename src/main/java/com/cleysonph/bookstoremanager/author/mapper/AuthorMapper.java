@@ -6,13 +6,13 @@ import com.cleysonph.bookstoremanager.author.entity.Author;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
-public interface AuthorMapper {
+@Mapper(componentModel = "spring")
+public abstract class AuthorMapper {
 
-    AuthorMapper INSTANCE = Mappers.getMapper(AuthorMapper.class);
+    public static final AuthorMapper INSTANCE = Mappers.getMapper(AuthorMapper.class);
 
-    Author toModel(AuthorDTO authorDTO);
+    public abstract Author toModel(AuthorDTO authorDTO);
 
-    AuthorDTO toDTO(Author author);
+    public abstract AuthorDTO toDTO(Author author);
 
 }
