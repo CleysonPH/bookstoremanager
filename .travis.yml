@@ -3,12 +3,8 @@ language: java
 sudo: false
 jdk: openjdk11
 install: true
-addons:
-  sonarcloud:
-    organization: "cleysonph"
-    token: ${SONAR_TOKEN}
 script:
-  - mvn clean verify sonar:sonar -P sonar -Dsonar.projectKey=CleysonPH_bookstoremanager
+  - mvn clean verify sonar:sonar -P sonar -Dsonar.organization=${SONAR_ORGANIZATION} -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.login=${SONAR_TOKEN}
 cache:
   directories:
     - $HOME/.m2
