@@ -6,10 +6,9 @@ install: true
 addons:
   sonarcloud:
     organization: "cleysonph"
-    token:
-      secure: "YvxJKs6dqLc+0JA1bPSYNNCL3Qv9QTEQJt+9DBg7QWYWegBjnohAylb5BicsJX1zgR4L/rA6PDg0I58Np4J5TqHt6GYGl4gjUBCdgqik4jUN3Xsg3DVhiOJSpH28zObFCs2T9DYz6za03WVXO73N/iQPV9f+/0sDJzSDY30rsn8QskzMEvBySsPrapqfqtJdJ1m422hE4Wp6BuJvd0ivqfXsOBRZuH0M9DF3f6OxCbJriRaOP9ewIRp556bCtzm1ERCP1scxJogwqH1ofkY1Cxk9AEcre4AASL+eliUWK6dt1RduuHF973wTaOGoaDy1uPvJJR76fr29p9UgjnfcHVVDX1Zp+GwF9h/dTZaKVnOlCMPTiENML29aA9af3Si5a35zZjQPadPoKe0n58fhTyt7SaLgGzMm6S0tgyxrxTROK3S0IU9tZKMFGE5RFwVSFdkleby6v5GDvXNN+RpeX37BZ1D1rkinfSPKZu4JXPagaGHaf9zX4lfo5KeSIfQNLMO10l1Cw/wVAypWl6yGp3/t1TedDGXSfJE0RweUBMrsMoDkZLtwb+3iu1TLhLfyMqXKjpNZ/vfMuT+QYRsKmmo+DOMuG6MVYYMFCW5mYdyX6z+2edn5VGfJjxSNdeQmn78QEs6snaKPMqktdOPOZdwLR8+cO0yAupMttZsmczw="
+    token: ${SONAR_TOKEN}
 script:
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=CleysonPH_bookstoremanager
+  - mvn clean verify sonar:sonar -P sonar -Dsonar.projectKey=CleysonPH_bookstoremanager
 cache:
   directories:
     - $HOME/.m2
