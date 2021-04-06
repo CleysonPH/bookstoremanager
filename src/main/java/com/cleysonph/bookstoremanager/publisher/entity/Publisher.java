@@ -12,12 +12,15 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.cleysonph.bookstoremanager.book.entity.Book;
+import com.cleysonph.bookstoremanager.entity.Auditable;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Entity
-public class Publisher {
+public class Publisher extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

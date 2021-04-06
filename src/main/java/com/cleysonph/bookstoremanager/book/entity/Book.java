@@ -9,14 +9,17 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import com.cleysonph.bookstoremanager.author.entity.Author;
+import com.cleysonph.bookstoremanager.entity.Auditable;
 import com.cleysonph.bookstoremanager.publisher.entity.Publisher;
 import com.cleysonph.bookstoremanager.user.entity.User;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Entity
-public class Book {
+public class Book extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
