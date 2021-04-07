@@ -1,5 +1,8 @@
 package com.cleysonph.bookstoremanager.author.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.cleysonph.bookstoremanager.author.dto.AuthorDTO;
 import com.cleysonph.bookstoremanager.author.entity.Author;
 import com.cleysonph.bookstoremanager.author.exception.AuthorAlreadyExistsException;
@@ -37,6 +40,13 @@ public class AuthorService {
             .orElseThrow(() -> new AuthorNotFoundException(id));
 
         return AUTHOR_MAPPER.toDTO(foundAuthor);
+    }
+
+    public List<AuthorDTO> findAll() {
+        return authorRepository.findAll()
+            .stream()
+            .map(AUTHOR_MAPPER::toDTO)
+            .collect(Collectors.toList());
     }
 
     private void verifiIfExists(String authorName) {
