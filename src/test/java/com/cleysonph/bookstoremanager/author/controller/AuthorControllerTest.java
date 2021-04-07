@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 @ExtendWith(MockitoExtension.class)
-public class AuthorControllerTest {
+class AuthorControllerTest {
 
     private static final String AUTHOR_API_URL_PATH = "/api/v1/authors";
 
