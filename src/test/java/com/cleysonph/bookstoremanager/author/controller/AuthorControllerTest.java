@@ -4,6 +4,7 @@ import static com.cleysonph.bookstoremanager.author.utils.JsonConversionUtils.as
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -72,6 +73,21 @@ public class AuthorControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(asJsonString(expectedCreatedAuthorDTO)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void whenGETWithValidIdIsCalledThenOStatusOkShouldBeReturned() throws Exception {
+        AuthorDTO expectedFoundAuthorDTO = authorDTOBuilder.builAuthorDTO();
+
+        when(authorService.findById(expectedFoundAuthorDTO.getId()))
+            .thenReturn(expectedFoundAuthorDTO);
+
+        mockMvc.perform(get(AUTHOR_API_URL_PATH + "/" + expectedFoundAuthorDTO.getId())
+            .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(expectedFoundAuthorDTO.getId().intValue())))
+                .andExpect(jsonPath("$.name", is(expectedFoundAuthorDTO.getName())))
+                .andExpect(jsonPath("$.age", is(expectedFoundAuthorDTO.getAge().intValue())));
     }
 
 }
