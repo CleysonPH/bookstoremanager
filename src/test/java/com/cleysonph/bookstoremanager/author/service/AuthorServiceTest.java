@@ -5,6 +5,9 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
@@ -138,6 +141,44 @@ class AuthorServiceTest {
         List<AuthorDTO> foundAuthorsDTO = authorService.findAll();
 
         assertThat(foundAuthorsDTO.size(), is(0));
+    }
+
+    @Test
+    void whenValidAuthorIdIsGivenThenItShouldBeDeleted() {
+        // given
+        AuthorDTO expectedDeletedAuthorDTO = authorDTOBuilder.builAuthorDTO();
+        Author expectedDeletedAuthor = authorMapper.toModel(expectedDeletedAuthorDTO);
+        Long expectedDeletedAuthorId = expectedDeletedAuthorDTO.getId();
+
+        // when
+        doNothing().when(authorRepository).deleteById(expectedDeletedAuthorId);
+        when(authorRepository.findById(expectedDeletedAuthorId))
+            .thenReturn(Optional.of(expectedDeletedAuthor));
+
+        // then
+        authorService.deleteById(expectedDeletedAuthorId);
+
+        verify(authorRepository, times(1)).deleteById(expectedDeletedAuthorId);
+        verify(authorRepository, times(1)).findById(expectedDeletedAuthorId);
+    }
+
+    @Test
+    void whenInvalidAuthorIdIsGivenThenAnExceptionShouldBeThrown() {
+        // given
+        Long expectedInvalidAuthorId = 2L;
+
+        // when
+        when(authorRepository.findById(expectedInvalidAuthorId))
+            .thenReturn(Optional.empty());
+
+        // then
+        try {
+            authorService.deleteById(expectedInvalidAuthorId);
+            fail("Expected an AuthorNotFoundException to be thrown");
+        } catch (AuthorNotFoundException e) {
+            assertThat(e.getMessage(),
+                is(String.format("Author with id %s not exists", expectedInvalidAuthorId)));
+        }
     }
 
 }
