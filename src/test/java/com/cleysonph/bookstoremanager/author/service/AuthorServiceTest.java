@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
@@ -101,9 +102,13 @@ class AuthorServiceTest {
             .thenReturn(Optional.empty());
 
         // then
-        assertThrows(AuthorNotFoundException.class, () -> {
+        try {
             authorService.findById(expectedFoundAuthorDTO.getId());
-        });
+            fail("Expected an AuthorNotFoundException to be thrown");
+        } catch (AuthorNotFoundException e) {
+            assertThat(e.getMessage(),
+                is(String.format("Author with id %s not exists", expectedFoundAuthorDTO.getId())));
+        }
     }
 
     @Test
