@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Collections;
+
 import com.cleysonph.bookstoremanager.author.builder.AuthorDTOBuilder;
 import com.cleysonph.bookstoremanager.author.dto.AuthorDTO;
 import com.cleysonph.bookstoremanager.author.service.AuthorService;
@@ -76,7 +78,7 @@ public class AuthorControllerTest {
     }
 
     @Test
-    void whenGETWithValidIdIsCalledThenOStatusOkShouldBeReturned() throws Exception {
+    void whenGETWithValidIdIsCalledThenStatusOkShouldBeReturned() throws Exception {
         AuthorDTO expectedFoundAuthorDTO = authorDTOBuilder.builAuthorDTO();
 
         when(authorService.findById(expectedFoundAuthorDTO.getId()))
@@ -88,6 +90,21 @@ public class AuthorControllerTest {
                 .andExpect(jsonPath("$.id", is(expectedFoundAuthorDTO.getId().intValue())))
                 .andExpect(jsonPath("$.name", is(expectedFoundAuthorDTO.getName())))
                 .andExpect(jsonPath("$.age", is(expectedFoundAuthorDTO.getAge().intValue())));
+    }
+
+    @Test
+    void whenGETListIsCalledThenStatusOkShouldBeReturned() throws Exception {
+        AuthorDTO expectedFoundAuthorDTO = authorDTOBuilder.builAuthorDTO();
+
+        when(authorService.findAll())
+            .thenReturn(Collections.singletonList(expectedFoundAuthorDTO));
+
+        mockMvc.perform(get(AUTHOR_API_URL_PATH)
+            .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(expectedFoundAuthorDTO.getId().intValue())))
+                .andExpect(jsonPath("$[0].name", is(expectedFoundAuthorDTO.getName())))
+                .andExpect(jsonPath("$[0].age", is(expectedFoundAuthorDTO.getAge().intValue())));
     }
 
 }

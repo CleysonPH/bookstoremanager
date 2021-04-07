@@ -1,5 +1,7 @@
 package com.cleysonph.bookstoremanager.author.controller;
 
+import java.util.List;
+
 import com.cleysonph.bookstoremanager.author.dto.AuthorDTO;
 
 import io.swagger.annotations.Api;
@@ -23,5 +25,11 @@ public interface AuthorControllerDocs {
         @ApiResponse(code = 404, message = "Author not found error code")
     })
     AuthorDTO findById(Long id);
+
+    @ApiOperation(value = "List all registred authors")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Return all registred authors"),
+    })
+    List<AuthorDTO> findAll();
 
 }

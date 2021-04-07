@@ -1,5 +1,7 @@
 package com.cleysonph.bookstoremanager.author.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import com.cleysonph.bookstoremanager.author.dto.AuthorDTO;
@@ -35,6 +37,11 @@ public class AuthorController implements AuthorControllerDocs {
     @GetMapping("/{id}")
     public AuthorDTO findById(@PathVariable Long id) {
         return authorService.findById(id);
+    }
+
+    @GetMapping
+    public List<AuthorDTO> findAll() {
+        return authorService.findAll();
     }
 
 }
