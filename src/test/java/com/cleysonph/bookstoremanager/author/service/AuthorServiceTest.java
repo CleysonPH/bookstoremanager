@@ -12,6 +12,7 @@ import com.cleysonph.bookstoremanager.author.builder.AuthorDTOBuilder;
 import com.cleysonph.bookstoremanager.author.dto.AuthorDTO;
 import com.cleysonph.bookstoremanager.author.entity.Author;
 import com.cleysonph.bookstoremanager.author.exception.AuthorAlreadyExistsException;
+import com.cleysonph.bookstoremanager.author.exception.AuthorNotFoundException;
 import com.cleysonph.bookstoremanager.author.mapper.AuthorMapper;
 import com.cleysonph.bookstoremanager.author.repository.AuthorRepository;
 
@@ -48,7 +49,8 @@ public class AuthorServiceTest {
 
         // when
         when(authorRepository.save(expectedCreatedAuthor)).thenReturn(expectedCreatedAuthor);
-        when(authorRepository.findByName(expectedAuthorToCreateDTO.getName())).thenReturn(Optional.empty());
+        when(authorRepository.findByName(expectedAuthorToCreateDTO.getName()))
+            .thenReturn(Optional.empty());
 
         AuthorDTO createdAuthorDTO = authorService.create(expectedAuthorToCreateDTO);
 
@@ -63,11 +65,43 @@ public class AuthorServiceTest {
         Author expectedCreatedAuthor = authorMapper.toModel(expectedAuthorToCreateDTO);
 
         // when
-        when(authorRepository.findByName(expectedAuthorToCreateDTO.getName())).thenReturn(Optional.of(expectedCreatedAuthor));
+        when(authorRepository.findByName(expectedAuthorToCreateDTO.getName()))
+            .thenReturn(Optional.of(expectedCreatedAuthor));
 
         // then
         assertThrows(AuthorAlreadyExistsException.class,
             () -> authorService.create(expectedAuthorToCreateDTO));
+    }
+
+    @Test
+    void whenValidIdIsGivenThenAnAuthorShouldBeReturned(){
+        // given
+        AuthorDTO expectedFoundAuthorDTO = authorDTOBuilder.builAuthorDTO();
+        Author expectedFoundAuthor = authorMapper.toModel(expectedFoundAuthorDTO);
+
+        // when
+        when(authorRepository.findById(expectedFoundAuthorDTO.getId()))
+            .thenReturn(Optional.of(expectedFoundAuthor));
+
+        // then
+        AuthorDTO foundAuthorDTO = authorService.findById(expectedFoundAuthorDTO.getId());
+
+        assertThat(foundAuthorDTO, is(equalTo(expectedFoundAuthorDTO)));
+    }
+
+    @Test
+    void whenInvalidIdIsGivenThenAnExceptionShouldBeThrown(){
+        // given
+        AuthorDTO expectedFoundAuthorDTO = authorDTOBuilder.builAuthorDTO();
+
+        // when
+        when(authorRepository.findById(expectedFoundAuthorDTO.getId()))
+            .thenReturn(Optional.empty());
+
+        // then
+        assertThrows(AuthorNotFoundException.class, () -> {
+            authorService.findById(expectedFoundAuthorDTO.getId());
+        });
     }
 
 }
