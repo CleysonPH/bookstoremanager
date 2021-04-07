@@ -9,6 +9,7 @@ import com.cleysonph.bookstoremanager.author.service.AuthorService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,6 +43,12 @@ public class AuthorController implements AuthorControllerDocs {
     @GetMapping
     public List<AuthorDTO> findAll() {
         return authorService.findAll();
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void deleteById(@PathVariable Long id) {
+        authorService.deleteById(id);
     }
 
 }
