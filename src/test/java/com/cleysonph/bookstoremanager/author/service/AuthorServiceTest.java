@@ -26,7 +26,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class AuthorServiceTest {
+class AuthorServiceTest {
 
     private final AuthorMapper authorMapper = AuthorMapper.INSTANCE;
 
