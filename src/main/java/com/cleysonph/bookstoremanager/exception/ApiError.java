@@ -1,6 +1,6 @@
 package com.cleysonph.bookstoremanager.exception;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -22,7 +22,7 @@ public class ApiError {
     private String status;
 
     @JsonFormat(shape = Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
-    private LocalDate timestamp;
+    private LocalDateTime timestamp;
 
     private String message;
 

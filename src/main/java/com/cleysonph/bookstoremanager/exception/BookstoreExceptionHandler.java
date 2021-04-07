@@ -1,6 +1,6 @@
 package com.cleysonph.bookstoremanager.exception;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -67,10 +67,10 @@ public class BookstoreExceptionHandler extends ResponseEntityExceptionHandler {
             .status(httpStatus.getReasonPhrase())
             .message(message)
             .errors(errors)
-            .timestamp(LocalDate.now())
+            .timestamp(LocalDateTime.now())
             .build();
 
-        return ResponseEntity.status(httpStatus).body(apiError);
+        return new ResponseEntity<>(apiError, httpStatus);
     }
 
 }
