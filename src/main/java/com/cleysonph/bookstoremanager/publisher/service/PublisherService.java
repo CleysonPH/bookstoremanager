@@ -1,6 +1,8 @@
 package com.cleysonph.bookstoremanager.publisher.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.cleysonph.bookstoremanager.publisher.dto.PublisherDTO;
 import com.cleysonph.bookstoremanager.publisher.entity.Publisher;
@@ -38,6 +40,13 @@ public class PublisherService {
         return publisherRepository.findById(id)
             .map(PUBLISHER_MAPPER::toDTO)
             .orElseThrow(() -> new PublisherNotFoundExcepton(id));
+    }
+
+    public List<PublisherDTO> findAll() {
+        return publisherRepository.findAll()
+            .stream()
+            .map(PUBLISHER_MAPPER::toDTO)
+            .collect(Collectors.toList());
     }
 
     private void verifyIfExists(String name, String code) {

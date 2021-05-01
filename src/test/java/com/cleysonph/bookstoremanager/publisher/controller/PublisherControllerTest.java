@@ -8,9 +8,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Collections;
+
 import com.cleysonph.bookstoremanager.publisher.builder.PublisherDTOBuilder;
 import com.cleysonph.bookstoremanager.publisher.dto.PublisherDTO;
-import com.cleysonph.bookstoremanager.publisher.exception.PublisherNotFoundExcepton;
 import com.cleysonph.bookstoremanager.publisher.service.PublisherService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -83,12 +84,25 @@ public class PublisherControllerTest {
         when(publisherService.findById(expectedFoundPublisherDTOId)).thenReturn(expectedFoundPublisherDTO);
 
         mockMvc.perform(get(PUBLISHER_API_URL_PATH + "/" + expectedFoundPublisherDTOId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(expectedFoundPublisherDTO)))
+                .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id", is(expectedFoundPublisherDTOId.intValue())))
             .andExpect(jsonPath("$.name", is(expectedFoundPublisherDTO.getName())))
             .andExpect(jsonPath("$.code", is(expectedFoundPublisherDTO.getCode())));
+    }
+
+    @Test
+    void whenGETListIsCalledThenStatusOkShouldBeThrown() throws Exception {
+        PublisherDTO expectedFoundPublisherDTO = publisherDTOBuilder.buildPublisherDTO();
+
+        when(publisherService.findAll()).thenReturn(Collections.singletonList(expectedFoundPublisherDTO));
+
+        mockMvc.perform(get(PUBLISHER_API_URL_PATH)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].id", is(expectedFoundPublisherDTO.getId().intValue())))
+            .andExpect(jsonPath("$[0].name", is(expectedFoundPublisherDTO.getName())))
+            .andExpect(jsonPath("$[0].code", is(expectedFoundPublisherDTO.getCode())));
     }
 
 }

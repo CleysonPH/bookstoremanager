@@ -1,5 +1,7 @@
 package com.cleysonph.bookstoremanager.publisher.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import com.cleysonph.bookstoremanager.publisher.dto.PublisherDTO;
@@ -35,6 +37,11 @@ public class PublisherController implements PublisherControllerDocs {
     @GetMapping("/{id}")
     public PublisherDTO findById(@PathVariable Long id) {
         return publisherService.findById(id);
+    }
+
+    @GetMapping
+    public List<PublisherDTO> findAll() {
+        return publisherService.findAll();
     }
 
 }
