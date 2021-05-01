@@ -49,6 +49,16 @@ public class PublisherService {
             .collect(Collectors.toList());
     }
 
+    public void delete(Long id) {
+        verifyIfExists(id);
+
+        publisherRepository.deleteById(id);
+    }
+
+    private void verifyIfExists(Long id) {
+        publisherRepository.findById(id).orElseThrow(() -> new PublisherNotFoundExcepton(id));
+    }
+
     private void verifyIfExists(String name, String code) {
         Optional<Publisher> duplicatedPublisher = publisherRepository.findByNameOrCode(name, code);
 
