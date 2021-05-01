@@ -1,5 +1,7 @@
 package com.cleysonph.bookstoremanager.publisher.controller;
 
+import java.util.List;
+
 import com.cleysonph.bookstoremanager.publisher.dto.PublisherDTO;
 
 import io.swagger.annotations.Api;
@@ -19,9 +21,15 @@ public interface PublisherControllerDocs {
 
     @ApiOperation(value = "Find publisher by id operation")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Success publisher found"),
+        @ApiResponse(code = 200, message = "Success publisher found"),
         @ApiResponse(code = 404, message = "Publisher not found error"),
     })
     PublisherDTO findById(Long id);
+
+    @ApiOperation(value = "List all registered publishers")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Return all registered publishers"),
+    })
+    List<PublisherDTO> findAll();
 
 }

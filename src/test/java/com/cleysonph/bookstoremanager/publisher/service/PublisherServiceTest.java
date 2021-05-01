@@ -6,6 +6,9 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import com.cleysonph.bookstoremanager.publisher.builder.PublisherDTOBuilder;
@@ -99,6 +102,28 @@ public class PublisherServiceTest {
         } catch (PublisherNotFoundExcepton e) {
             assertThat(e.getMessage(), is(String.format("Publisher with id %s not exists!", expectedPublisherFoundId)));
         }
+    }
+
+    @Test
+    void whenListPublisherIsCalledThenItShouldBeReturned() {
+        PublisherDTO expectedPublisherFoundDTO = publisherDTOBuilder.buildPublisherDTO();
+        Publisher expectedPublisherFound = PUBLISHER_MAPPER.toModel(expectedPublisherFoundDTO);
+
+        when(publisherRepository.findAll()).thenReturn(Collections.singletonList(expectedPublisherFound));
+
+        List<PublisherDTO> foundPublishersDTO = publisherService.findAll();
+
+        assertThat(foundPublishersDTO.size(), is(1));
+        assertThat(foundPublishersDTO.get(0), is(equalTo(expectedPublisherFoundDTO)));
+    }
+
+    @Test
+    void whenListPublisherIsCalledThenAnEmptyListShouldBeReturned() {
+        when(publisherRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
+
+        List<PublisherDTO> foundPublishersDTO = publisherService.findAll();
+
+        assertThat(foundPublishersDTO.size(), is(0));
     }
 
 }
