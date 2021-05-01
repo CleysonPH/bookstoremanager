@@ -5,6 +5,7 @@ import java.util.Optional;
 import com.cleysonph.bookstoremanager.publisher.dto.PublisherDTO;
 import com.cleysonph.bookstoremanager.publisher.entity.Publisher;
 import com.cleysonph.bookstoremanager.publisher.exception.PublisherAlreadyExistsException;
+import com.cleysonph.bookstoremanager.publisher.exception.PublisherNotFoundExcepton;
 import com.cleysonph.bookstoremanager.publisher.mapper.PublisherMapper;
 import com.cleysonph.bookstoremanager.publisher.repository.PublisherRepository;
 
@@ -31,6 +32,12 @@ public class PublisherService {
         Publisher createdPublisher = publisherRepository.save(publisherToCreate);
 
         return PUBLISHER_MAPPER.toDTO(createdPublisher);
+    }
+
+    public PublisherDTO findById(Long id) {
+        return publisherRepository.findById(id)
+            .map(PUBLISHER_MAPPER::toDTO)
+            .orElseThrow(() -> new PublisherNotFoundExcepton(id));
     }
 
     private void verifyIfExists(String name, String code) {

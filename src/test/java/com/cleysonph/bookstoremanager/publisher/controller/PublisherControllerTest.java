@@ -4,11 +4,13 @@ import static com.cleysonph.bookstoremanager.author.utils.JsonConversionUtils.as
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.cleysonph.bookstoremanager.publisher.builder.PublisherDTOBuilder;
 import com.cleysonph.bookstoremanager.publisher.dto.PublisherDTO;
+import com.cleysonph.bookstoremanager.publisher.exception.PublisherNotFoundExcepton;
 import com.cleysonph.bookstoremanager.publisher.service.PublisherService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -71,6 +73,22 @@ public class PublisherControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(expectedCreatedPublisherDTO)))
             .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void whenGETWithValidIdIsCalledThenStatusOkShouldBeThrown() throws Exception {
+        PublisherDTO expectedFoundPublisherDTO = publisherDTOBuilder.buildPublisherDTO();
+        Long expectedFoundPublisherDTOId = expectedFoundPublisherDTO.getId();
+
+        when(publisherService.findById(expectedFoundPublisherDTOId)).thenReturn(expectedFoundPublisherDTO);
+
+        mockMvc.perform(get(PUBLISHER_API_URL_PATH + "/" + expectedFoundPublisherDTOId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(expectedFoundPublisherDTO)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id", is(expectedFoundPublisherDTOId.intValue())))
+            .andExpect(jsonPath("$.name", is(expectedFoundPublisherDTO.getName())))
+            .andExpect(jsonPath("$.code", is(expectedFoundPublisherDTO.getCode())));
     }
 
 }

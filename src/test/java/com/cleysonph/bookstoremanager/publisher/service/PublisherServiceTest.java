@@ -12,6 +12,7 @@ import com.cleysonph.bookstoremanager.publisher.builder.PublisherDTOBuilder;
 import com.cleysonph.bookstoremanager.publisher.dto.PublisherDTO;
 import com.cleysonph.bookstoremanager.publisher.entity.Publisher;
 import com.cleysonph.bookstoremanager.publisher.exception.PublisherAlreadyExistsException;
+import com.cleysonph.bookstoremanager.publisher.exception.PublisherNotFoundExcepton;
 import com.cleysonph.bookstoremanager.publisher.mapper.PublisherMapper;
 import com.cleysonph.bookstoremanager.publisher.repository.PublisherRepository;
 
@@ -69,6 +70,34 @@ public class PublisherServiceTest {
             String name = expectedPublisherToCreateDTO.getName();
             String code = expectedPublisherToCreateDTO.getCode();
             assertThat(e.getMessage(), is(String.format("Publisher with name %s or code %s already exists!", name, code)));
+        }
+    }
+
+    @Test
+    void whenValidIdIsGivenThenAPublisherShoudBeReturned() {
+        PublisherDTO expectedPublisherFoundDTO = publisherDTOBuilder.buildPublisherDTO();
+        Publisher expectedPublisherFound = PUBLISHER_MAPPER.toModel(expectedPublisherFoundDTO);
+        Long expectedPublisherFoundId = expectedPublisherFound.getId();
+
+        when(publisherRepository.findById(expectedPublisherFoundId)).thenReturn(Optional.of(expectedPublisherFound));
+
+        PublisherDTO foundPublisherDTO = publisherService.findById(expectedPublisherFoundId);
+
+        assertThat(foundPublisherDTO, is(equalTo(expectedPublisherFoundDTO)));
+    }
+
+    @Test
+    void whenInvalidIdIsGivenThenAnExceptionShouldBeThrown() {
+        PublisherDTO expectedPublisherFoundDTO = publisherDTOBuilder.buildPublisherDTO();
+        Long expectedPublisherFoundId = expectedPublisherFoundDTO.getId();
+
+        when(publisherRepository.findById(expectedPublisherFoundId)).thenReturn(Optional.empty());
+
+        try {
+            publisherService.findById(expectedPublisherFoundId);
+            fail("Expected an PublisherNotFoundException to be thrown");
+        } catch (PublisherNotFoundExcepton e) {
+            assertThat(e.getMessage(), is(String.format("Publisher with id %s not exists!", expectedPublisherFoundId)));
         }
     }
 
