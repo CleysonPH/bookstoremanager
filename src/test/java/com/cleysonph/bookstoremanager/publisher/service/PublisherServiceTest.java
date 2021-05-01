@@ -4,6 +4,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collection;
@@ -124,6 +127,34 @@ public class PublisherServiceTest {
         List<PublisherDTO> foundPublishersDTO = publisherService.findAll();
 
         assertThat(foundPublishersDTO.size(), is(0));
+    }
+
+    @Test
+    void whenValidPublisherIdIsGivenThenItShouldBeDeleted() {
+        PublisherDTO expectedPublisherDeletedDTO = publisherDTOBuilder.buildPublisherDTO();
+        Publisher expectedPublisherDeleted = PUBLISHER_MAPPER.toModel(expectedPublisherDeletedDTO);
+
+        Long expectedDeletedPublisherId = expectedPublisherDeletedDTO.getId();
+        doNothing().when(publisherRepository).deleteById(expectedDeletedPublisherId);
+        when(publisherRepository.findById(expectedDeletedPublisherId)).thenReturn(Optional.of(expectedPublisherDeleted));
+
+        publisherService.delete(expectedDeletedPublisherId);
+
+        verify(publisherRepository, times(1)).deleteById(expectedDeletedPublisherId);
+    }
+
+    @Test
+    void whenInvalidPublisherIdIsGivenThenAnExceptionShouldBeThrown() {
+        Long expectedInvalidPublisherId = 2L;
+
+        when(publisherRepository.findById(expectedInvalidPublisherId)).thenReturn(Optional.empty());
+
+        try {
+            publisherService.delete(expectedInvalidPublisherId);
+            fail("Expected an PublisherNotFoundException to be thrown");
+        } catch (PublisherNotFoundExcepton e) {
+            assertThat(e.getMessage(), is(String.format("Publisher with id %s not exists!", expectedInvalidPublisherId)));
+        }
     }
 
 }

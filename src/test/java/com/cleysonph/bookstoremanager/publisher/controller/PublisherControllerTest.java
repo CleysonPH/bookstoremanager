@@ -2,9 +2,11 @@ package com.cleysonph.bookstoremanager.publisher.controller;
 
 import static com.cleysonph.bookstoremanager.author.utils.JsonConversionUtils.asJsonString;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -92,7 +94,7 @@ public class PublisherControllerTest {
     }
 
     @Test
-    void whenGETListIsCalledThenStatusOkShouldBeThrown() throws Exception {
+    void whenGETListIsCalledThenStatusOkShouldBeInformed() throws Exception {
         PublisherDTO expectedFoundPublisherDTO = publisherDTOBuilder.buildPublisherDTO();
 
         when(publisherService.findAll()).thenReturn(Collections.singletonList(expectedFoundPublisherDTO));
@@ -103,6 +105,18 @@ public class PublisherControllerTest {
             .andExpect(jsonPath("$[0].id", is(expectedFoundPublisherDTO.getId().intValue())))
             .andExpect(jsonPath("$[0].name", is(expectedFoundPublisherDTO.getName())))
             .andExpect(jsonPath("$[0].code", is(expectedFoundPublisherDTO.getCode())));
+    }
+
+    @Test
+    void whenDELETEIsCalledThenStatusNoContentShouldBeInformed() throws Exception {
+        PublisherDTO expectedPublisherToDeleteDTO = publisherDTOBuilder.buildPublisherDTO();
+        Long expectedPublisherToDeletedId = expectedPublisherToDeleteDTO.getId();
+
+        doNothing().when(publisherService).delete(expectedPublisherToDeletedId);
+
+        mockMvc.perform(delete(PUBLISHER_API_URL_PATH + "/" + expectedPublisherToDeletedId)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent());
     }
 
 }
