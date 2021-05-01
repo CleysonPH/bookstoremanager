@@ -1,5 +1,10 @@
 package com.cleysonph.bookstoremanager.publisher.service;
 
+import java.util.Optional;
+
+import com.cleysonph.bookstoremanager.publisher.dto.PublisherDTO;
+import com.cleysonph.bookstoremanager.publisher.entity.Publisher;
+import com.cleysonph.bookstoremanager.publisher.exception.PublisherAlreadyExistsException;
 import com.cleysonph.bookstoremanager.publisher.mapper.PublisherMapper;
 import com.cleysonph.bookstoremanager.publisher.repository.PublisherRepository;
 
@@ -16,5 +21,23 @@ public class PublisherService {
     @Autowired
     public PublisherService(PublisherRepository publisherRepository) {
         this.publisherRepository = publisherRepository;
+    }
+
+    public PublisherDTO create(PublisherDTO publisherDTO) {
+        verifyIfExists(publisherDTO.getName(), publisherDTO.getCode());
+
+        Publisher publisherToCreate = PUBLISHER_MAPPER.toModel(publisherDTO);
+
+        Publisher createdPublisher = publisherRepository.save(publisherToCreate);
+
+        return PUBLISHER_MAPPER.toDTO(createdPublisher);
+    }
+
+    private void verifyIfExists(String name, String code) {
+        Optional<Publisher> duplicatedPublisher = publisherRepository.findByNameOrCode(name, code);
+
+        if (duplicatedPublisher.isPresent()) {
+            throw new PublisherAlreadyExistsException(name, code);
+        }
     }
 }
