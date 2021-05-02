@@ -7,7 +7,7 @@ script:
   - mvn clean verify sonar:sonar -P sonar -Dsonar.organization=${SONAR_ORGANIZATION} -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.login=${SONAR_TOKEN}
 cache:
   directories:
-    - $HOME/.m2
+    - $HOME/.m2/repository
     - $HOME/.sonar/cache
 after_success:
   - bash <(curl -s https://codecov.io/bash)
