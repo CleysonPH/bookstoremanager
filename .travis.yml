@@ -3,11 +3,16 @@ language: java
 sudo: false
 jdk: openjdk11
 install: true
+addons:
+  sonarcloud:
+    organization: "cleysonph"
+    token:
+      secure: "FpjkdM9EvrEluNcaI7khgOhDhfNSeyjtoNVQ0KJJIFrOUV8LGx74CXy/Gfx8d++G/ax63PNgN3ol4Sh7xXdN0zPEi84jnMIUN9Rkw90/fbMLfgJdWu9TBWkLihn7+LVkbdVDfG/E14iBO/RN986jH2TTAKSuuLv6hwlSp9PWHM/KsxSTrBMBaV7Vbkx7fRyXIk/gdKiNdce4cwNRXk/Lk0d/LqaIuYRvRd9wGlXIC458vGg5J/PCQLKLuQWa/BwqUWElADOlcokeoJiJ0eYEmu2G76SALjaTt3C+5o08Wv1B0qk4kx5Z5MqOeHOYPRKt94NdXX0g7eBca0zH4NGNI1y0kA2m5s1sxmsLFam0DTOJJSiYZi6mZg7QIP43rPTkj/s3PCvKpmVbG57Re4Hfmgk/HvU3cCWHPkKIsP9detacsj5wA9koDi05GEwjCkKMc0jwCWXNFhIj0QFLJMMz1T1tNb1EjzegSrN6ZWeaJZdfpCyc4XDGjjjFKl4wmhg+CbZ1IhX2poiaq4ttpRllWFvzh0/3mNFgpAN6byDwONj/k3UuHxMC/p3XD4X4s035FkjoHaOqgQcgvg17jjksaWFpxnqtr+dt/C139tT2Wc7CaTDOPqOHTV8CPI3kr6dLBH3bShshS5DAbm/yC3tOG4uX6I1UqwrXVVPrNQMey0E="
 script:
-  - mvn clean verify sonar:sonar -P sonar -Dsonar.organization=${SONAR_ORGANIZATION} -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.login=${SONAR_TOKEN}
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=CleysonPH_bookstoremanager
 cache:
   directories:
-    - $HOME/.m2
+    - $HOME/.m2/repository
     - $HOME/.sonar/cache
 after_success:
   - bash <(curl -s https://codecov.io/bash)
