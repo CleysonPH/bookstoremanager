@@ -124,6 +124,7 @@
 					src/main/java/**/repository/**,
 					src/test/java/**
 				</sonar.exclusions>
+				<sonar.organization>cleysonph</sonar.organization>
 			</properties>
 			<build>
 				<plugins>
