@@ -113,6 +113,18 @@
 	<profiles>
 		<profile>
 			<id>coverage</id>
+			<properties>
+				<sonar.host.url>https://sonarcloud.io/</sonar.host.url>
+				<sonar.exclusions>
+					src/main/java/**/BookstoremanagerApplication.java,
+					src/main/java/**/config/**,
+					src/main/java/**/exception/**,
+					src/main/java/**/dto/**,
+					src/main/java/**/entity/**,
+					src/main/java/**/repository/**,
+					src/test/java/**
+				</sonar.exclusions>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
