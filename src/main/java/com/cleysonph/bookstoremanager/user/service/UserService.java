@@ -6,6 +6,7 @@ import com.cleysonph.bookstoremanager.user.dto.MessageDTO;
 import com.cleysonph.bookstoremanager.user.dto.UserDTO;
 import com.cleysonph.bookstoremanager.user.entity.User;
 import com.cleysonph.bookstoremanager.user.exception.UserAlreadyExistsException;
+import com.cleysonph.bookstoremanager.user.exception.UserNotFoundException;
 import com.cleysonph.bookstoremanager.user.mapper.UserMapper;
 import com.cleysonph.bookstoremanager.user.repository.UserRepository;
 
@@ -32,6 +33,16 @@ public class UserService {
         User createdUser = userRepository.save(userToCreate);
 
         return creationMessage(createdUser);
+    }
+
+    public void delete(Long id) {
+        verifyIfExists(id);
+
+        userRepository.deleteById(id);
+    }
+
+    private void verifyIfExists(Long id) {
+        userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
     private void verifyIfExists(String email, String username) {

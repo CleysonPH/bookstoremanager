@@ -18,4 +18,11 @@ public interface UserControllerDocs {
     })
     MessageDTO create(UserDTO userToCreateDTO);
 
+    @ApiOperation(value = "User exclusion operation")
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Success user exclusion"),
+        @ApiResponse(code = 404, message = "User with informed id not found in this system")
+    })
+    void delete(Long id);
+
 }
