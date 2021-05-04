@@ -6,6 +6,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -87,6 +88,34 @@ public class UserControllerTest {
         mockMvc.perform(delete(USER_API_URL_PATH + "/" + expectedUserIdToDelete)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void whenPUTIsCalledThenOkStatusShouldBeReturned() throws Exception {
+        UserDTO expectedUserToUpdateDTO = userDTOBuilder.buildUserDTO();
+        expectedUserToUpdateDTO.setUsername("cleysonph_updated");
+        Long expectedUserIdToUpdate = expectedUserToUpdateDTO.getId();
+        String expectedUpdateMessage = "User cleysonph_updated with ID 1 successfully updated";
+        MessageDTO expectedUpdateMessageDTO = MessageDTO.builder().message(expectedUpdateMessage).build();
+
+        when(userService.update(expectedUserIdToUpdate, expectedUserToUpdateDTO)).thenReturn(expectedUpdateMessageDTO);
+
+        mockMvc.perform(put(USER_API_URL_PATH + "/" + expectedUserIdToUpdate)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(expectedUserToUpdateDTO)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message", is(expectedUpdateMessage)));
+    }
+
+    @Test
+    void whenPUTIsCalledWithoutRequiredFieldsThenBadRequestStatusShouldBeReturned() throws Exception {
+        UserDTO expectedUserToUpdateDTO = userDTOBuilder.buildUserDTO();
+        expectedUserToUpdateDTO.setUsername(null);
+
+        mockMvc.perform(put(USER_API_URL_PATH + "/" + expectedUserToUpdateDTO.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(expectedUserToUpdateDTO)))
+            .andExpect(status().isBadRequest());
     }
 
 }

@@ -25,4 +25,11 @@ public interface UserControllerDocs {
     })
     void delete(Long id);
 
+    @ApiOperation(value = "User update operation")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Success user updated"),
+        @ApiResponse(code = 404, message = "User with informed id not found in this system")
+    })
+    MessageDTO update(Long id, UserDTO userToUpdateDTO);
+
 }
