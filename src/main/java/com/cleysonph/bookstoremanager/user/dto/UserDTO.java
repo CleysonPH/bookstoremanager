@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.cleysonph.bookstoremanager.user.enums.Gender;
+import com.cleysonph.bookstoremanager.user.enums.Role;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
@@ -54,5 +55,9 @@ public class UserDTO {
     @NotNull
     @JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate birthDate;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private Role role;
 
 }

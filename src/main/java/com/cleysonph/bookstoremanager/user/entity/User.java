@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import com.cleysonph.bookstoremanager.book.entity.Book;
 import com.cleysonph.bookstoremanager.entity.Auditable;
 import com.cleysonph.bookstoremanager.user.enums.Gender;
+import com.cleysonph.bookstoremanager.user.enums.Role;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -53,5 +54,9 @@ public class User extends Auditable {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Book> books;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private Role role;
 
 }
