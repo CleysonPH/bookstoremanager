@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import com.cleysonph.bookstoremanager.user.dto.UserDTO;
 import com.cleysonph.bookstoremanager.user.enums.Gender;
+import com.cleysonph.bookstoremanager.user.enums.Role;
 
 import lombok.Builder;
 
@@ -34,8 +35,11 @@ public class UserDTOBuilder {
     @Builder.Default
     private LocalDate birthDate = LocalDate.of(1996, 6, 8);
 
+    @Builder.Default
+    private Role role = Role.USER;
+
     public UserDTO buildUserDTO() {
-        return new UserDTO(id, name, age, gender, email, username, password, birthDate);
+        return new UserDTO(id, name, age, gender, email, username, password, birthDate, role);
     }
 
 }
