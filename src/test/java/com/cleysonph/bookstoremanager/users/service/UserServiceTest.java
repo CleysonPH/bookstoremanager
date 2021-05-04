@@ -113,4 +113,34 @@ public class UserServiceTest {
         }
     }
 
+    @Test
+    void whenExistingUserIsInformedThenItShouldBeUpdated() {
+        UserDTO expectedUpdatedUserDTO = userDTOBuilder.buildUserDTO();
+        expectedUpdatedUserDTO.setUsername("cleysonph_update");
+        User expectedUpdatedUser = userMapper.toModel(expectedUpdatedUserDTO);
+        String expectedUpdatedMessage = "User cleysonph_update with ID 1 successfully updated";
+
+        when(userRepository.findById(expectedUpdatedUserDTO.getId())).thenReturn(Optional.of(expectedUpdatedUser));
+        when(userRepository.save(expectedUpdatedUser)).thenReturn(expectedUpdatedUser);
+
+        MessageDTO successUpdatedMessage = userService.update(expectedUpdatedUserDTO.getId(), expectedUpdatedUserDTO);
+
+        assertThat(successUpdatedMessage.getMessage(), is(equalTo(expectedUpdatedMessage)));
+    }
+
+    @Test
+    void whenNotExistingUserIsInformedThenAnExceptionShouldBeThrown() {
+        UserDTO expectedUpdatedUserDTO = userDTOBuilder.buildUserDTO();
+        String expectedExceptionMessage = String.format("User with ID %s not exists", expectedUpdatedUserDTO.getId());
+
+        when(userRepository.findById(expectedUpdatedUserDTO.getId())).thenReturn(Optional.empty());
+
+        try {
+            userService.update(expectedUpdatedUserDTO.getId(), expectedUpdatedUserDTO);
+            fail("An UserNotFoundException should be thrown");
+        } catch (UserNotFoundException e) {
+            assertThat(e.getMessage(), is(equalTo(expectedExceptionMessage)));
+        }
+    }
+
 }
