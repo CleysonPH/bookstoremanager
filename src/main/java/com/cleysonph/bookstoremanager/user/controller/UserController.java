@@ -2,8 +2,11 @@ package com.cleysonph.bookstoremanager.user.controller;
 
 import javax.validation.Valid;
 
+import com.cleysonph.bookstoremanager.user.dto.JwtRequest;
+import com.cleysonph.bookstoremanager.user.dto.JwtResponse;
 import com.cleysonph.bookstoremanager.user.dto.MessageDTO;
 import com.cleysonph.bookstoremanager.user.dto.UserDTO;
+import com.cleysonph.bookstoremanager.user.service.AuthenticationService;
 import com.cleysonph.bookstoremanager.user.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +26,12 @@ public class UserController implements UserControllerDocs {
 
     private UserService userService;
 
+    private AuthenticationService authenticationService;
+
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthenticationService authenticationService) {
         this.userService = userService;
+        this.authenticationService = authenticationService;
     }
 
     @PostMapping
@@ -43,6 +49,11 @@ public class UserController implements UserControllerDocs {
     @PutMapping("/{id}")
     public MessageDTO update(@PathVariable Long id, @RequestBody @Valid UserDTO userToUpdateDTO) {
         return userService.update(id, userToUpdateDTO);
+    }
+
+    @PostMapping("/authenticate")
+    public JwtResponse createAuthenticationToken(@RequestBody @Valid JwtRequest jwtRequest) {
+        return authenticationService.createAuthenticationToken(jwtRequest);
     }
 
 }
